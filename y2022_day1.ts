@@ -1,4 +1,6 @@
 import * as aoc from "./aoc";
+import * as A from "fp-ts/Array";
+import * as N from "fp-ts/number";
 
 const a = new aoc.aoc(2022, 1, false);
 const elfCalories = a.loadLineGroups();
@@ -7,5 +9,11 @@ const elfCalories = a.loadLineGroups();
 const nums = elfCalories.map(aoc.linesToNums);
 //console.log("nums: " + nums);
 //console.log("nums.length: " + nums.length);
-const totals = nums.map(aoc.sum);
+const totals: number[] = nums.map(aoc.sum);
 console.log("Max cals: " + Math.max(...totals));
+
+const sortedTotals = A.sort(N.Ord)(totals).reverse();
+console.log(sortedTotals);
+console.log(
+    "Top 3: cals: " + (sortedTotals[0] + sortedTotals[1] + sortedTotals[2])
+);
