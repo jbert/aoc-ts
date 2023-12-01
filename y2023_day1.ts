@@ -63,5 +63,3 @@ export const run = (a: aoc.Aoc): void => {
     console.log(p2nums);
     console.log("Part2: " + aoc.sum(p2nums));
 };
-
-run(a);

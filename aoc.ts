@@ -3,34 +3,39 @@ import * as fs from "fs";
 export class Aoc {
     day: number;
     year: number;
-    useTestData: boolean;
     lines: Array<string>;
 
-    constructor(year: number, day: number, useTestData: boolean = true) {
+    constructor(
+        year: number,
+        day: number,
+        useTestData: boolean = true,
+        suffix?: string
+    ) {
         this.day = day;
         this.year = year;
-        this.useTestData = useTestData;
-        this.lines = this.loadLines();
+        suffix ??= "";
+        if (useTestData) {
+            suffix = "-test" + suffix;
+        }
+        this.lines = this.loadLines(suffix);
     }
 
-    loadLines(): string[] {
-        const contents = this.load();
+    loadLines(suffix: string): string[] {
+        const contents = this.load(suffix);
         let lines = contents.split("\n");
         lines.pop();
         return lines;
     }
 
-    load(): string {
-        const path = this.path();
+    load(suffix: string): string {
+        const path = this.path(suffix);
         const contents = fs.readFileSync(path, "utf8");
         return contents;
     }
 
-    path(): string {
+    path(suffix: string): string {
         let path = "./data/y" + this.year + "/day" + this.day;
-        if (this.useTestData) {
-            path += "-test";
-        }
+        path += suffix;
         path += ".txt";
         return path;
     }
