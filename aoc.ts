@@ -1,18 +1,16 @@
 import * as fs from "fs";
 
-export class aoc {
+export class Aoc {
     day: number;
     year: number;
     useTestData: boolean;
+    lines: Array<string>;
 
     constructor(year: number, day: number, useTestData: boolean = true) {
         this.day = day;
         this.year = year;
         this.useTestData = useTestData;
-    }
-
-    toString(): string {
-        return "Year " + this.year + " Day " + this.day;
+        this.lines = this.loadLines();
     }
 
     loadLines(): string[] {
@@ -20,22 +18,6 @@ export class aoc {
         let lines = contents.split("\n");
         lines.pop();
         return lines;
-    }
-
-    loadLineGroups(): string[][] {
-        const lines = this.loadLines();
-        var lineGroups = new Array<Array<string>>();
-        let currentGroup = new Array<string>();
-        lines.forEach((l) => {
-            if (l === "") {
-                lineGroups.push(currentGroup);
-                currentGroup = [];
-            } else {
-                currentGroup.push(l);
-            }
-        });
-        lineGroups.push(currentGroup);
-        return lineGroups;
     }
 
     load(): string {
@@ -51,6 +33,25 @@ export class aoc {
         }
         path += ".txt";
         return path;
+    }
+
+    toString(): string {
+        return "Year " + this.year + " Day " + this.day;
+    }
+
+    lineGroups(): string[][] {
+        var lineGroups = new Array<Array<string>>();
+        let currentGroup = new Array<string>();
+        this.lines.forEach((l) => {
+            if (l === "") {
+                lineGroups.push(currentGroup);
+                currentGroup = [];
+            } else {
+                currentGroup.push(l);
+            }
+        });
+        lineGroups.push(currentGroup);
+        return lineGroups;
     }
 }
 

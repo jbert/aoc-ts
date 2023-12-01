@@ -2,8 +2,8 @@ import * as aoc from "./aoc";
 import * as A from "fp-ts/Array";
 import * as N from "fp-ts/number";
 
-const a = new aoc.aoc(2022, 1, false);
-const elfCalories = a.loadLineGroups();
+const a = new aoc.Aoc(2022, 1, false);
+const elfCalories = a.lineGroups();
 //console.log("ecs: " + elfCalories);
 //console.log("num elves: " + elfCalories.length);
 const nums = elfCalories.map(aoc.linesToNums);
