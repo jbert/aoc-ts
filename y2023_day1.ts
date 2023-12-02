@@ -1,7 +1,5 @@
 import * as aoc from "./aoc";
 
-const a = new aoc.Aoc(2023, 1, false);
-
 const digitToNumber = (d: string): number => {
     return Number(d);
 };
