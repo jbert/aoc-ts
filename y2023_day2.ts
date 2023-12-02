@@ -2,6 +2,25 @@ import * as aoc from "./aoc";
 
 type colour = "red" | "green" | "blue";
 
+const power = (m: Map<colour, number>): number => {
+    let p = (m.get("red") ?? 1) * (m.get("blue") ?? 1) * (m.get("green") ?? 1);
+    return p;
+};
+
+const minSet = (g: game): Map<colour, number> => {
+    let ret = new Map<colour, number>();
+    ["red", "green", "blue"].forEach((c) => {
+        let col = c as colour;
+        g.reveals.forEach((r) => {
+            const rcol: number = r.get(col) ?? 0;
+            if (rcol > (ret.get(col) ?? 0)) {
+                ret.set(col, rcol);
+            }
+        });
+    });
+    return ret;
+};
+
 class game {
     id: number;
     reveals: Array<Map<colour, number>>;
@@ -43,4 +62,6 @@ export const run = (a: aoc.Aoc): void => {
     constraints.set("blue", 14);
     const possibles = games.filter((g) => possible(g, constraints));
     console.log(aoc.sum(possibles.map((p) => p.id)));
+
+    console.log(aoc.sum(games.map(minSet).map(power)));
 };
