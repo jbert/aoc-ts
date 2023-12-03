@@ -33,14 +33,13 @@ var bounds: P.Rect;
 export const run = (a: aoc.Aoc): void => {
     const p1 = calcp1(a);
     console.log(`Part 1: ${p1}`);
-    //    const p2 = calcp2(a);
-    //    console.log(`Part 2: ${p2}`);
+    const p2 = calcp2(a);
+    console.log(`Part 2: ${p2}`);
 };
 
-/*
 export const calcp2 = (a: aoc.Aoc): number => {
-    const rxStar = /\/g;
-    const gears: Array<matchLoc> = a.lines.flatMap((l, j) => {
+    const rxStar = /\*/g;
+    const stars: Array<matchLoc> = a.lines.flatMap((l, j) => {
         const y = a.lines.length - 1 - (j ?? 0);
         const matches = [...l.matchAll(rxStar)];
         return matches.map((m) => {
@@ -67,14 +66,32 @@ export const calcp2 = (a: aoc.Aoc): number => {
         new P.Pt(0, 0),
         new P.Pt(a.lines[0].length - 1, a.lines.length - 1)
     );
-    const charAt = (p: P.Pt): string => {
-        const c = a.lines[a.lines.length - p.y - 1][p.x];
-        return c;
-    };
 
-    const adjacent = (a: matchLoc, b: matchLoc): boolean => {};
+    const adjacent = (a: matchLoc, b: matchLoc): boolean => {
+        const nAs = mlNeighbours(a);
+        const nBs = mlPts(b);
+        //        console.log("nAs " + nAs);
+        //        console.log("nAs.length " + nAs.length);
+        //        console.log("nBs " + nBs);
+        //        console.log("nBs.length " + nBs.length);
+        const is = aoc.intersect(nAs, nBs);
+        //console.log(
+        //    `a ${a.start} ${a.s} b ${b.start} ${b.s} nAs ${nAs} nBs ${nBs} is ${is}`
+        //);
+        return is.length > 0;
+    };
+    let gearRatios = new Array<number>();
+    stars.forEach((star) => {
+        let adjNums = numStrs.filter((numStr) => adjacent(star, numStr));
+        //console.log(`star ${star.start}`);
+        //adjNums.forEach((an) => console.log(`an ${an.start}`));
+        if (adjNums.length == 2) {
+            gearRatios.push(Number(adjNums[0].s) * Number(adjNums[1].s));
+        }
+    });
+    console.log("gear ratios: " + gearRatios);
+    return aoc.sum(gearRatios);
 };
-*/
 
 export const calcp1 = (a: aoc.Aoc): number => {
     //    a.setLines(".....\n.467.\n....+".split("\n"));

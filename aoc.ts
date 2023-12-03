@@ -64,6 +64,18 @@ export class Aoc {
     }
 }
 
+export function intersect(as: Array<any>, bs: Array<any>): Array<any> {
+    let result = new Array<any>();
+    for (let i = 0; i < as.length; i++) {
+        for (let j = 0; j < bs.length; j++) {
+            if (as[i].equals(bs[j])) {
+                result.push(as[i]);
+            }
+        }
+    }
+    return result;
+}
+
 export function unique(as: Array<any>): Array<any> {
     const firstMatch = (v: any): number => {
         for (let i = 0; i < as.length; i++) {
