@@ -2,6 +2,7 @@
 import * as aoc from "./aoc";
 import * as y2023d1 from "./y2023_day1";
 import * as y2023d2 from "./y2023_day2";
+import * as y2023d3 from "./y2023_day3";
 
 const getArgs = (): Array<string> => {
     // Called as ts-node script arg1 arg2 ...
@@ -30,6 +31,7 @@ const getDay = (year: number, day: number) => {
     let d2c = new Map();
     d2c.set(1, y2023d1.run);
     d2c.set(2, y2023d2.run);
+    d2c.set(3, y2023d3.run);
     return d2c.get(day);
 };
 
