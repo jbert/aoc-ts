@@ -20,6 +20,10 @@ export class Aoc {
         this.lines = this.loadLines(suffix);
     }
 
+    setLines(lines: Array<string>) {
+        this.lines = lines;
+    }
+
     loadLines(suffix: string): string[] {
         const contents = this.load(suffix);
         let lines = contents.split("\n");
@@ -58,6 +62,37 @@ export class Aoc {
         lineGroups.push(currentGroup);
         return lineGroups;
     }
+}
+
+export function unique(as: Array<any>): Array<any> {
+    const firstMatch = (v: any): number => {
+        for (let i = 0; i < as.length; i++) {
+            const w = as[i];
+            if (w.equals(v)) {
+                return i;
+            }
+        }
+        throw "logic bug - value not in array";
+    };
+    return as.filter((v, i) => {
+        return firstMatch(v) == i;
+    });
+}
+
+export function all(bs: Array<boolean>): boolean {
+    return bs.every((x: boolean) => x);
+}
+
+export function any(bs: Array<boolean>): boolean {
+    return bs.some((x: boolean) => x);
+}
+
+export function isDigit(s: string): boolean {
+    return s.length == 1 && s[0] >= "0" && s[0] <= "9";
+}
+
+export function iota(start: number, end: number): Array<number> {
+    return [...Array(end - start).keys()].map((n) => n + start);
 }
 
 export function linesToNums(ls: string[]): number[] {
