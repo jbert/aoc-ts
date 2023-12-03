@@ -9,19 +9,74 @@ class grid {
 }
 */
 
-interface numLoc {
-    digits: string;
+interface matchLoc {
+    s: string;
     start: P.Pt;
 }
+
+const mlPts = (ml: matchLoc): Array<P.Pt> => {
+    return aoc.iota(ml.start.x, ml.start.x + ml.s.length).map((x) => {
+        return new P.Pt(x, ml.start.y);
+    });
+};
+
+const mlNeighbours = (ml: matchLoc): Array<P.Pt> => {
+    return aoc.unique(
+        bounds.filterWithin(
+            aoc.unique(mlPts(ml).flatMap((p) => p.allNeighbours()))
+        )
+    );
+};
 
 var bounds: P.Rect;
 
 export const run = (a: aoc.Aoc): void => {
-    const p1 = calc(a);
+    const p1 = calcp1(a);
     console.log(`Part 1: ${p1}`);
+    //    const p2 = calcp2(a);
+    //    console.log(`Part 2: ${p2}`);
 };
 
-export const calc = (a: aoc.Aoc): number => {
+/*
+export const calcp2 = (a: aoc.Aoc): number => {
+    const rxStar = /\/g;
+    const gears: Array<matchLoc> = a.lines.flatMap((l, j) => {
+        const y = a.lines.length - 1 - (j ?? 0);
+        const matches = [...l.matchAll(rxStar)];
+        return matches.map((m) => {
+            return {
+                s: m[0],
+                start: new P.Pt(m.index ?? 0, y),
+            };
+        });
+    });
+
+    const rxNum = /[0-9]+/g;
+    const numStrs: Array<matchLoc> = a.lines.flatMap((l, j) => {
+        const y = a.lines.length - 1 - (j ?? 0);
+        const matches = [...l.matchAll(rxNum)];
+        return matches.map((m) => {
+            return {
+                s: m[0],
+                start: new P.Pt(m.index ?? 0, y),
+            };
+        });
+    });
+
+    bounds = new P.Rect(
+        new P.Pt(0, 0),
+        new P.Pt(a.lines[0].length - 1, a.lines.length - 1)
+    );
+    const charAt = (p: P.Pt): string => {
+        const c = a.lines[a.lines.length - p.y - 1][p.x];
+        return c;
+    };
+
+    const adjacent = (a: matchLoc, b: matchLoc): boolean => {};
+};
+*/
+
+export const calcp1 = (a: aoc.Aoc): number => {
     //    a.setLines(".....\n.467.\n....+".split("\n"));
     bounds = new P.Rect(
         new P.Pt(0, 0),
@@ -29,12 +84,12 @@ export const calc = (a: aoc.Aoc): number => {
     );
     //    let g = new grid(a.lines);
     const rx = /[0-9]+/g;
-    const numStrs: Array<numLoc> = a.lines.flatMap((l, j) => {
+    const numStrs: Array<matchLoc> = a.lines.flatMap((l, j) => {
         const y = a.lines.length - 1 - (j ?? 0);
         const matches = [...l.matchAll(rx)];
         return matches.map((m) => {
             return {
-                digits: m[0],
+                s: m[0],
                 start: new P.Pt(m.index ?? 0, y),
             };
         });
@@ -44,24 +99,17 @@ export const calc = (a: aoc.Aoc): number => {
         return c;
     };
     const serials = numStrs.filter((m) => {
-        const digitPts: Array<P.Pt> = aoc
-            .iota(m.start.x, m.start.x + m.digits.length)
-            .map((x) => {
-                return new P.Pt(x, m.start.y);
-            });
-        return hasSymbolNeighbour(digitPts, charAt);
+        return hasSymbolNeighbour(m, charAt);
     });
-    return aoc.sum(serials.map((s) => Number(s.digits)));
+    return aoc.sum(serials.map((s) => Number(s.s)));
 };
 
 const isSymbol = (s: string): boolean => {
     return s != "." && !aoc.isDigit(s);
 };
 
-const hasSymbolNeighbour = (ps: Array<P.Pt>, charAt: (q: P.Pt) => string) => {
-    const allNs = aoc.unique(ps.flatMap((p) => p.allNeighbours()));
-    const ns = aoc.unique(bounds.filterWithin(allNs));
-    return aoc.any(ns.map((p) => isSymbol(charAt(p))));
+const hasSymbolNeighbour = (ml: matchLoc, charAt: (q: P.Pt) => string) => {
+    return aoc.any(mlNeighbours(ml).map((p) => isSymbol(charAt(p))));
 };
 /*
     return aoc.any(
