@@ -108,10 +108,10 @@ export function iota(start: number, end: number): Array<number> {
 }
 
 export function linesToNums(ls: string[]): number[] {
-    return ls.map(lineToNum);
+    return ls.map(strToNum);
 }
 
-export function lineToNum(l: string): number {
+export function strToNum(l: string): number {
     return +l;
 }
 
