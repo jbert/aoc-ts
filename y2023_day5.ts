@@ -1,5 +1,4 @@
 import * as aoc from "./aoc";
-import { pipe } from "fp-ts/function";
 
 export const run = (a: aoc.Aoc): void => {
     const p1 = calcp1(a);
@@ -34,31 +33,30 @@ const myPipe = (n: number, fs: Array<(n: number) => number>): number => {
     return n;
 };
 
-const runRange = (r: range): ((n: number) => number) => {
-    return (n: number): number => {
-        if (n < r.src || n > r.src + r.len) {
-            return n;
-        }
-        return n - r.src + r.dst;
-    };
+const rangeApplies = (r: range, n: number) => {
+    return n >= r.src && n < r.src + r.len;
 };
 
 const runMap =
     (m: map) =>
     (n: number): number => {
-        return myPipe(
-            n,
-            m.ranges.map((r) => {
-                console.log(`Map: ${m.from} -> ${m.to}`);
-                return runRange(r);
-            })
-        );
+        const ranges = m.ranges.filter((r) => rangeApplies(r, n));
+        if (ranges.length == 0) {
+            return n;
+        }
+        return n - ranges[0].src + ranges[0].dst;
     };
 
 const runMaps = (s: number, maps: Array<map>) => {
     return myPipe(
         s,
-        maps.map((m) => runMap(m))
+        maps.map((m) => {
+            return (n: number): number => {
+                let v = runMap(m)(n);
+                console.log(`${n} -> ${m.to} ${v}`);
+                return v;
+            };
+        })
     );
 };
 
@@ -76,7 +74,7 @@ const parseMaps = (ls: Array<string>): map => {
 
 const parseRange = (s: string): range => {
     const bits = s.split(" ").map(aoc.strToNum);
-    return { src: bits[0], dst: bits[1], len: bits[2] };
+    return { src: bits[1], dst: bits[0], len: bits[2] };
 };
 
 const parseSeeds = (l: string): Array<number> => {
