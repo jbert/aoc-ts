@@ -4,6 +4,7 @@ import * as y2023d1 from "./y2023_day1";
 import * as y2023d2 from "./y2023_day2";
 import * as y2023d3 from "./y2023_day3";
 import * as y2023d4 from "./y2023_day4";
+import * as y2023d5 from "./y2023_day5";
 
 const getArgs = (): Array<string> => {
     // Called as ts-node script arg1 arg2 ...
@@ -34,6 +35,7 @@ const getDay = (year: number, day: number) => {
     d2c.set(2, y2023d2.run);
     d2c.set(3, y2023d3.run);
     d2c.set(4, y2023d4.run);
+    d2c.set(5, y2023d5.run);
     return d2c.get(day);
 };
 
