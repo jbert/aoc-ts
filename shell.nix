@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {}}:
 
 pkgs.mkShell {
-  packages = [ pkgs.typescript ];
+  packages = [ pkgs.typescript pkgs.nodePackages.ts-node ];
 }
