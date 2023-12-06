@@ -3,8 +3,8 @@ import * as aoc from "./aoc";
 export const run = (a: aoc.Aoc): void => {
     const p1 = calcp1(a);
     console.log(`Part 1: ${p1}`);
-    //    const p2 = calcp2(a);
-    //    console.log(`Part 2: ${p2}`);
+    const p2 = calcp2(a);
+    console.log(`Part 2: ${p2}`);
 };
 
 /*
@@ -47,18 +47,53 @@ const raceTime = (r, Tb: number): number => {
     return r.distance / Tb + Tb;
 };
 
+/*
+Tr * Tb = D + Tb^2      // 9: From 6
+Tb^2 - Tr*Tb + D = 0    // 10: From 9
+Solve for Tb in terms of D and Tr
+
+                        // Ax^2 + Bx + C = 0
+                        // => (-B +/- sqrt(B^2 - 4*A*C))/(2*A)
+A = 1, B = -Tr, C = D
+Tb(Tr,D) = (Tr +/- sqrt(Tr^2 - 4*D)) / 2
+ */
+const raceButtonPressLoHi = (r: race): Array<number> => {
+    const term = Math.sqrt(r.bestTime * r.bestTime - 4 * r.distance);
+    const lo = Math.ceil((r.bestTime - term) / 2);
+    const hi = Math.floor((r.bestTime + term) / 2);
+    return [lo, hi];
+};
+
 const raceNumWins = (r: race): number => {
-    const raceTimes = aoc.iota(1, r.distance - 1).map((Tb) => raceTime(r, Tb));
-    console.log(raceTimes);
-    return raceTimes.filter((Tr) => Tr < r.bestTime).length;
+    //    const raceTimes = aoc.iota(1, r.distance - 1).map((Tb) => raceTime(r, Tb));
+    const lohi = raceButtonPressLoHi(r);
+    const lo = lohi[0];
+    const hi = lohi[1];
+    let raceWins = hi - lo + 1;
+    console.log(`raceWins ${raceWins} lo ${lo} hi ${hi}`);
+    return raceWins;
+};
+
+export const calcp2 = (a: aoc.Aoc): number => {
+    const race = parseRacesP2(a.lines);
+    console.log(race);
+    const numWins = raceNumWins(race);
+    console.log(numWins);
+    return numWins;
 };
 
 export const calcp1 = (a: aoc.Aoc): number => {
-    console.log(a.lines);
     const races = parseRaces(a.lines);
     const numWins = races.map(raceNumWins);
     console.log(numWins);
     return aoc.mul(numWins);
+};
+
+const parseRacesP2 = (ls: Array<string>): race => {
+    const re = /([0-9]+)/g;
+    const time = [...ls[0].matchAll(re)].map((match) => match[0]).join("");
+    const distance = [...ls[1].matchAll(re)].map((match) => match[0]).join("");
+    return { bestTime: Number(time), distance: Number(distance) };
 };
 
 const parseRaces = (ls: Array<string>): Array<race> => {
