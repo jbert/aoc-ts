@@ -115,6 +115,9 @@ export function strToNum(l: string): number {
     return +l;
 }
 
+export function mul(ns: number[]): number {
+    return ns.reduce((a, b) => a * b, 1);
+}
 export function sum(ns: number[]): number {
     return ns.reduce((a, b) => a + b, 0);
 }
