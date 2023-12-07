@@ -55,14 +55,11 @@ export class hand {
             countMap.set(c, prev + 1);
         }
         const jCount = countMap.get("J") ?? 0;
-        if (jCount == 5) {
-            this.powerp2 = 7;
-            return;
-        }
         countMap.delete("J");
         const counts = [...countMap.values()].sort(
             (a, b) => Number(b) - Number(a)
         );
+        counts[0] ??= 0;
         counts[0] += jCount;
         if (counts[0] == 5) {
             this.powerp2 = 7;
